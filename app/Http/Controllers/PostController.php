@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -10,9 +12,23 @@ class PostController extends Controller
     //
     public function index()
     {
+        $title = '';
+        if (request('category')) {
+            # code...
+            $category = Category::firstWhere('slug', request('category'));
+            $title = ' in ' . $category->name;
+        }
+
+        if (request('author')) {
+            # code...
+            $author = User::firstWhere('username', request('author'));
+            $title = ' by ' . $author->name;
+        }
+
         return view('posts', [
-            "title" => "All Posts",
-            "posts" => Post::latest()->get()
+            "title" => "All Posts" . $title,
+            "posts" => Post::latest()->filter(request(['search', 'category', 'author']))->paginate(7)
+                ->withQueryString()
         ]);
     }
 
@@ -29,35 +45,6 @@ class PostController extends Controller
     //     'slug' => 'judul-post-pertama',
     //     'excerpt' => 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptates, reprehenderit.',
     //     'body' => '<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptates, reprehenderit. Lorem ipsum dolor sit amet consectetur adipisicing elit.</p> <p>Minus inventore non minima? Animi mollitia eaque fugiat iure explicabo sint cum.</p>'
-    // ])
-
-    // Post::create([
-    //     'title' => 'Judul Post Kedua',
-    //     'slug' => 'judul-post-kedua',
-    //     'excerpt' => 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam, nobis!',
-    //     'body' => '<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, fuga!</p> <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos, eligendi.</p>'
-    // ])
-
-
-    // Post::create([
-    //     'title' => 'Judul Post Ketiga',
-    //     'slug' => 'judul-post-ketiga',
-    //     'excerpt' => 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vitae, aperiam?',
-    //     'body' => '<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, fuga!</p> <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos, eligendi.</p>'
-    // ])
-
-    // Post::create([
-    //     'title' => 'Judul Post Keempat',
-    //     'slug' => 'judul-post-keempat',
-    //     'excerpt' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora, illo?',
-    //     'body' => '<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, inventore.</p> <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos, eligendi.</p>'
-    // ])
-
-    // Post::create([
-    //     'title' => 'Judul Post Kelima',
-    //     'slug' => 'judul-post-kelima',
-    //     'excerpt' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora, illo?',
-    //     'body' => '<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, inventore.</p> <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos, eligendi.</p>'
     // ])
 
 }
