@@ -13,15 +13,17 @@ class Post extends Model
 
     protected $guarded = ['id'];
 
-     public function category()
-        {
-            return $this->belongsTo(Category::class);
-        }
+    protected $with = ['category', 'author'];
+
+    // Relations Ship
+    public function category()
+    {
+        // Satu category di miliki oleh satu post
+        return $this->belongsTo(Category::class);
+    }
 
     public function author()
-        {
-            return $this->belongsTo(User::class, 'user_id');
-        }
-
-
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }
