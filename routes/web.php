@@ -8,6 +8,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdminCategoryController;
 use App\Http\Controllers\DashboardPostController;
 
 /*
@@ -62,6 +63,7 @@ Route::post('/register', [RegisterController::class, 'store'])->name('register.s
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 Route::get('/dashboard/posts/checkSlug', [DashboardPostController::class, 'checkSlug'])->middleware('auth');
 Route::resource('/dashboard/posts', DashboardPostController::class)->middleware('auth');
+Route::resource('/dashboard/categories', AdminCategoryController::class)->except('show')->middleware('admin');
 // ! sudah ada di query Model
 // Route::get('/categories/{category:slug}', function (Category $category) {
 //     return view('posts', [
